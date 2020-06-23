@@ -33,8 +33,9 @@ def processdict(dic):
 
 class sfcontainer:
 
-	def __init__(self, dict1):
-		self.dict1 = dict1	
+	def __init__(self, dicts):
+		self.dict1 = dicts[0]
+		self.dict2 = dicts[1]	
 		self.ptlist, self.etalist, self.pt_str, self.eta_str = processdict(self.dict1)
 
 	def getvalue(self, pt,eta ):
@@ -62,6 +63,7 @@ def sfselector(sfJ, sfZ, sfJ_el, sfZ_el, pt, eta, pdg):
 #generate dictionary from json file
 def gendict(filename):
 	_dict = dict()
+	_dict2 = dict()
 	with open(filename) as json_file:
     		sf = json.load(json_file)
 	
@@ -70,14 +72,16 @@ def gendict(filename):
 		for y in sf['Medium_PtEtaBins']['pt_abseta_ratio'][x]:
 
 			z = sf['Medium_PtEtaBins']['pt_abseta_ratio'][x][y]['value']
+			err = sf['Medium_PtEtaBins']['pt_abseta_ratio'][x][y]['error']
 			key =  str(x)+" "+str(y)
 			value = float(z)
 			_dict.update([(key,value)])
-		
+			_dict2.update([(key,err)])
+			
 
-	return _dict
+	return [_dict, _dict2]
 
-
+"""
 #load json into classes
 sfZ = sfcontainer(gendict(json_medsip_dy))
 sfJ = sfcontainer(gendict(json_medsip_jpsi))
@@ -165,4 +169,4 @@ ofile.Close()
 #print branch2
 
 #'Nele', 'Nmu', 'Nlep', 'PT_lep', 'Eta_lep', 'Phi_lep', 'M_lep', 'Charge_lep', 'PDGID_lep'
-
+"""
